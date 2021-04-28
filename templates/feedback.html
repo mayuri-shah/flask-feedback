@@ -1,0 +1,53 @@
+{% extends 'base.html'  %}
+
+{% block content %}
+<form method="POST" action="/feedback">
+
+    {{ form.hidden_tag() }}
+  
+    {% for field in form
+      if field.widget.input_type != 'hidden' %}
+    <p>
+      {{ field.label }}
+      {{ field(class_="form-control") }}
+  
+      {% for error in field.errors %}
+      <span class="form-text text-danger">{{ error }}</span>
+      {% endfor %}
+    </p>
+    {% endfor %}
+  
+    <button class="btn btn-success" type="submit">Add Feedback</button>
+    </form>
+
+    <div>
+        {% for feedback in feedbacks %}
+        <div class="card my-4">
+          <div class="card-body">
+            <h5 class="card-title text-info">
+              {{feedback.user.username}}
+              
+            </h5>
+            
+            <p class="card-text">
+              {{feedback.title}}
+            </p>
+            <p class="card-text">
+                {{feedback.content}}
+              </p>
+              {% if session['user_name'] == feedback.username %}
+              <form style="display:inline;" action="/feedback/edit/{{feedback.id}}" method="POST">
+                <button class="btn btn-sm btn-primary"><i class="fas fa-user-edit"></i></button>
+              </form>
+              <form style="display:inline;" action="/feedback/delete/{{feedback.id}}" method="POST">
+                <button class="btn btn-sm btn-danger"><i class="fas fa-trash"></i></button>
+              </form>
+              {% endif %}
+      
+          </div>
+        </div>
+      
+        {%  endfor %}
+      </div>
+  
+{% endblock %} 
